@@ -7,15 +7,14 @@ MedSim-AI, tıp eğitimi ve yapay zeka araştırmaları için sentetik hasta vak
 ## 🚀 Temel Özellikler
 | Özellik | Açıklama |
 |---|---|
-| 🧠 Teacher→Student distillation | MedGemma-27B → Gemma-9B/2B LoRA |
-| 🌍 Çift dil desteği | Şikayet halk ağzı, notlar akademik terminoloji |
+| 🧠 Teacher→Student distillation | MedGemma-27B → MedGemma-4B LoRA |
 | 📊 Epidemiyolojik uyum | Hastalık→yaş→cinsiyet tutarlılığı otomatik |
-| ⚡ vLLM Batch üretim | A100 ile binlerce vaka/dk |
+| ⚡ vLLM Batch üretim | A100 ile yüzlerce vaka/dk |
 | 🧪 LLM-as-a-Judge | Her vaka skorlanır (%100 JSON valid) |
 
 ## 🛠 Mimari Bileşenler
 **vLLM Veri Motoru → Distillation & Fine-tuning → Medikal Validasyon (LLM-as-Judge)**  
-Teknoloji: vLLM, PagedAttention, Gemma-27B/9B/2B, LoRA–Unsloth, HF Accelerate, JSON Schema doğrulama
+Teknoloji: vLLM, PagedAttention, MedGemma-27B/4B, LoRA–Unsloth, HF Accelerate, JSON Schema doğrulama
 
 
 ### Teknoloji Yığını
@@ -23,7 +22,7 @@ Teknoloji: vLLM, PagedAttention, Gemma-27B/9B/2B, LoRA–Unsloth, HF Accelerate,
 | Bileşen | Kullanılan Teknoloji |
 |---|---|
 | Veri Üretimi | **vLLM**, PagedAttention |
-| Model | google/gemma-2-27b-it (Teacher), Gemma-9B/2B-LoRA (Student) |
+| Model | google/medgemma-27b-it (Teacher), MedGemma-4B-LoRA (Student) |
 | Format | %100 Valid JSON Schema |
 | Fine-Tuning | LoRA, Unsloth, HF Accelerate |
 | Validasyon | Tıbbi Uyum – Vital Mantık – Realizm skoru |
@@ -58,7 +57,7 @@ Teknoloji: vLLM, PagedAttention, Gemma-27B/9B/2B, LoRA–Unsloth, HF Accelerate,
 
 ### Gereksinimler
 - Python **3.10+**
-- NVIDIA GPU (**A100 önerilir**, T4 ile Gemma-9B kullanılabilir)
+- NVIDIA GPU (T4)
 - HuggingFace Token
 
 ### Kurulum
@@ -70,21 +69,6 @@ pip install -r requirements.txt
 
 ```
 
-### 1) Sentetik Veri Üretimi (vLLM ile)
-A100 GPU üzerinde süper hızlı üretim için:
-
-```bash
-python generate_dataset_vllm.py --model "google/gemma-2-27b-it" --count 1000
-```
-
-### 2) Kalite Kontrol (Validasyon)
-
-Beta model sonuçlarını veya üretilmiş dataset'i doğrulamak için:
-```bash
-python validate_model.py --input "beta_results.json"
-```
-
-Bu script, vakaları tıbbi tutarlılık açısından analiz eder ve kalite_raporu.png grafiğini oluşturur.
 📊 Performans Karşılaştırması
 | Özellik | Standart Llama 3 8B | MedSim-AI (Fine-Tuned Gemma) |
 |---|---|---|
